@@ -32,98 +32,98 @@ else {
 	print "<div class='trail'>" ;
 	print "<div class='trailHead'><a href='" . $_SESSION[$guid]["absoluteURL"] . "'>" . _("Home") . "</a> > <a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . getModuleName($_GET["q"]) . "/" . getModuleEntry($_GET["q"], $connection2, $guid) . "'>" . _(getModuleName($_GET["q"])) . "</a> > </div><div class='trailEnd'>" . _('Manage Themes') . "</div>" ;
 	print "</div>" ;
-	
+
 	if (isset($_GET["deleteReturn"])) { $deleteReturn=$_GET["deleteReturn"] ; } else { $deleteReturn="" ; }
 	$deleteReturnMessage="" ;
 	$class="error" ;
 	if (!($deleteReturn=="")) {
 		if ($deleteReturn=="success0") {
-			$deleteReturnMessage=_("Uninstall was successful. You will still need to remove the theme's files yourself.") ;	
+			$deleteReturnMessage=_("Uninstall was successful. You will still need to remove the theme's files yourself.") ;
 			$class="success" ;
 		}
 		if ($deleteReturn=="success1") {
-			$deleteReturnMessage=_("Uninstall was successful.") ;	
+			$deleteReturnMessage=_("Uninstall was successful.") ;
 			$class="success" ;
 		}
 		print "<div class='$class'>" ;
 			print $deleteReturnMessage;
 		print "</div>" ;
-	} 
-	
+	}
+
 	if (isset($_GET["addReturn"])) { $addReturn=$_GET["addReturn"] ; } else { $addReturn="" ; }
 	$addReturnMessage="" ;
 	$class="error" ;
 	if (!($addReturn=="")) {
 		if ($addReturn=="fail0") {
-			$addReturnMessage=_("Your request failed because you do not have access to this action.") ;	
+			$addReturnMessage=_("Your request failed because you do not have access to this action.") ;
 		}
 		else if ($addReturn=="fail2") {
-			$addReturnMessage=_("Your request failed due to a database error.") ;	
+			$addReturnMessage=_("Your request failed due to a database error.") ;
 		}
 		else if ($addReturn=="fail3") {
-			$addReturnMessage=_("Your request failed because your manifest file was invalid.") ;	
+			$addReturnMessage=_("Your request failed because your manifest file was invalid.") ;
 		}
 		else if ($addReturn=="fail4") {
-			$addReturnMessage=_("Your request failed because a theme with the same name is already installed.") ;	
+			$addReturnMessage=_("Your request failed because a theme with the same name is already installed.") ;
 		}
 		else if ($addReturn=="success0") {
-			$addReturnMessage=_("Your request was successful. You can now add another record if you wish.") ;	
+			$addReturnMessage=_("Your request was successful. You can now add another record if you wish.") ;
 			$class="success" ;
 		}
 		print "<div class='$class'>" ;
 			print $addReturnMessage;
 		print "</div>" ;
-	} 
-	
+	}
+
 	if (isset($_GET["updateReturn"])) { $updateReturn=$_GET["updateReturn"] ; } else { $updateReturn="" ; }
 	$updateReturnMessage="" ;
 	$class="error" ;
 	if (!($updateReturn=="")) {
 		if ($updateReturn=="fail0") {
-			$updateReturnMessage=_("Your request failed because you do not have access to this action.") ;	
+			$updateReturnMessage=_("Your request failed because you do not have access to this action.") ;
 		}
 		else if ($updateReturn=="fail1") {
-			$updateReturnMessage=_("Your request failed because your inputs were invalid.") ;	
+			$updateReturnMessage=_("Your request failed because your inputs were invalid.") ;
 		}
 		else if ($updateReturn=="fail2") {
-			$updateReturnMessage=_("Your request failed due to a database error.") ;	
+			$updateReturnMessage=_("Your request failed due to a database error.") ;
 		}
 		else if ($updateReturn=="fail4") {
-			$updateReturnMessage=_("Your request failed because your inputs were invalid.") ;	
+			$updateReturnMessage=_("Your request failed because your inputs were invalid.") ;
 		}
 		else if ($updateReturn=="success0") {
-			$updateReturnMessage=_("Your request was completed successfully.") ;	
+			$updateReturnMessage=_("Your request was completed successfully.") ;
 			$class="success" ;
 		}
 		print "<div class='$class'>" ;
 			print $updateReturnMessage;
 		print "</div>" ;
-	} 
-	
-	
+	}
+
+
 	//Get themes from database, and store in an array
 	try {
-		$data=array(); 
-		$sql="SELECT * FROM gibbonTheme ORDER BY name" ; 
+		$data=array();
+		$sql="SELECT * FROM gibbonTheme ORDER BY name" ;
 		$result=$connection2->prepare($sql);
 		$result->execute($data);
 	}
-	catch(PDOException $e) { 
-		print "<div class='error'>" . $e->getMessage() . "</div>" ; 
+	catch(PDOException $e) {
+		print "<div class='error'>" . $e->getMessage() . "</div>" ;
 	}
 	$themesSQL=array() ;
 	while ($row=$result->fetch()) {
 		$themesSQL[$row["name"]][0]=$row ;
 		$themesSQL[$row["name"]][1]="orphaned" ;
 	}
-	
+
 	//Get list of modules in /modules directory
 	$themesFS=glob($_SESSION[$guid]["absolutePath"] . "/themes/*" , GLOB_ONLYDIR);
-	
+
 	print "<div class='warning'>" ;
 		print sprintf(_('To install a theme, upload the theme folder to %1$s on your server and then refresh this page. After refresh, the theme should appear in the list below: use the install button in the Actions column to set it up.'), "<b><u>" . $_SESSION[$guid]["absolutePath"] . "/modules/</u></b>") ;
 	print "</div>" ;
-	
+
 	if (count($themesFS)<1) {
 		print "<div class='error'>" ;
 		print _("There are no records to display.") ;
@@ -131,8 +131,8 @@ else {
 	}
 	else {
 		print "<form method='post' action='" . $_SESSION[$guid]["absoluteURL"] . "/modules/" . $_SESSION[$guid]["module"] . "/theme_manageProcess.php'>" ;
-			print "<table cellspacing='0' style='width: 100%'>" ;
-				print "<tr class='head'>" ;
+			print "<table cellspacing='0' style='width: 100%' data-responsive='true'>" ;
+				print "<thead><tr class='head'>" ;
 					print "<th>" ;
 						print _("Name") ;
 					print "</th>" ;
@@ -151,32 +151,32 @@ else {
 					print "<th>" ;
 						print _("Active") ;
 					print "</th>" ;
-					print "<th style='width: 50px'>" ;
+					print "<th>" ;
 						print _("Action") ;
 					print "</th>" ;
-				print "</tr>" ;
-				
+				print "</tr></thead>" ;
+
 				$count=0;
 				$rowNum="odd" ;
 				foreach ($themesFS AS $themesFS) {
 					$themeName=substr($themesFS, strlen($_SESSION[$guid]["absolutePath"] ."/themes/")) ;
 					$themesSQL[$themeName][1]="present" ;
-					
+
 					if ($count%2==0) {
 						$rowNum="even" ;
 					}
 					else {
 						$rowNum="odd" ;
 					}
-					
+
 					$installed=TRUE ;
 					if (isset($themesSQL[$themeName][0])==FALSE) {
 						$installed=FALSE ;
 						$rowNum="warning" ;
 					}
-				
+
 					$count++ ;
-					
+
 					//COLOR ROW BY STATUS!
 					print "<tr class=$rowNum>" ;
 						print "<td>" ;
@@ -221,21 +221,21 @@ else {
 									if ($themeVerison>$themesSQL[$themeName][0]["version"]) {
 										//Update database
 										try {
-											$data=array("version"=>$themeVerison, "gibbonThemeID"=>$themesSQL[$themeName][0]["gibbonThemeID"] ); 
-											$sql="UPDATE gibbonTheme SET version=:version WHERE gibbonThemeID=:gibbonThemeID" ; 
+											$data=array("version"=>$themeVerison, "gibbonThemeID"=>$themesSQL[$themeName][0]["gibbonThemeID"] );
+											$sql="UPDATE gibbonTheme SET version=:version WHERE gibbonThemeID=:gibbonThemeID" ;
 											$result=$connection2->prepare($sql);
 											$result->execute($data);
 										}
-										catch(PDOException $e) { 
-											print "<div class='error'>" . $e->getMessage() . "</div>" ; 
+										catch(PDOException $e) {
+											print "<div class='error'>" . $e->getMessage() . "</div>" ;
 										}
-										
+
 									}
 									else {
 										$themeVerison=$themesSQL[$themeName][0]["version"] ;
 									}
-									
-									
+
+
 									print "v" . $themeVerison ;
 								}
 							print "</td>" ;
@@ -258,6 +258,8 @@ else {
 							print "<td>" ;
 								if ($themesSQL[$themeName][0]["name"]!="Default") {
 									print "<a href='" . $_SESSION[$guid]["absoluteURL"] . "/index.php?q=/modules/" . $_SESSION[$guid]["module"] . "/theme_manage_uninstall.php&gibbonThemeID=" . $themesSQL[$themeName][0]["gibbonThemeID"] . "'><img title='" . _('Remove Record') . "' src='./themes/" . $_SESSION[$guid]["gibbonThemeName"] . "/img/garbage.png'/></a>" ;
+								}else{
+									print "<img class='disabled' title='" . _('Remove Record') . "' src='./themes/" . $_SESSION[$guid]["gibbonThemeName"] . "/img/garbage.png'/>";
 								}
 							print "</td>" ;
 						}
@@ -270,19 +272,15 @@ else {
 						}
 					print "</tr>" ;
 				}
-				print "<tr>" ;
-					print "<td colspan=7 class='right'>" ;
-						?>
-						<input type="hidden" name="address" value="<?php print $_SESSION[$guid]["address"] ?>">
-						<input type="submit" value="<?php print _("Submit") ; ?>">
-						<?php
-					print "</td>" ;
-				print "</tr>" ;
+
 			print "</table>" ;
-			
+			?>
+			<input type="hidden" name="address" value="<?php print $_SESSION[$guid]["address"] ?>">
+			<input type="submit" value="<?php print _("Submit") ; ?>">
+			<?php
 		print "</form>" ;
 	}
-	
+
 	//Find and display orphaned themes
 	$orphans=FALSE ;
 	foreach($themesSQL AS $themeSQL) {
@@ -290,7 +288,7 @@ else {
 			$orphans=TRUE ;
 		}
 	}
-	
+
 	if ($orphans) {
 		print "<h2 style='margin-top: 40px'>" ;
 			print _("Orphaned Themes") ;
@@ -298,7 +296,7 @@ else {
 		print "<p>" ;
 			print _("These themes are installed in the database, but are missing from within the file system.") ;
 		print "</p>" ;
-		
+
 		print "<table cellspacing='0' style='width: 100%'>" ;
 			print "<tr class='head'>" ;
 				print "<th>" ;
@@ -308,22 +306,22 @@ else {
 					print _("Action") ;
 				print "</th>" ;
 			print "</tr>" ;
-			
+
 			$count=0;
 			$rowNum="odd" ;
 			foreach($themesSQL AS $themeSQL) {
 				if ($themeSQL[1]=="orphaned") {
 					$themeName=$themeSQL[0]["name"] ;
-					
+
 					if ($count%2==0) {
 						$rowNum="even" ;
 					}
 					else {
 						$rowNum="odd" ;
 					}
-				
+
 					$count++ ;
-				
+
 					//COLOR ROW BY STATUS!
 					print "<tr class=$rowNum>" ;
 						print "<td>" ;
@@ -335,15 +333,11 @@ else {
 					print "</tr>" ;
 				}
 			}
-			print "<tr>" ;
-				print "<td colspan=7 class='right'>" ;
-					?>
-					<input type="hidden" name="address" value="<?php print $_SESSION[$guid]["address"] ?>">
-					<input type="submit" value="<?php print _("Submit") ; ?>">
-					<?php
-				print "</td>" ;
-			print "</tr>" ;
 		print "</table>" ;
+		?>
+		<input type="hidden" name="address" value="<?php print $_SESSION[$guid]["address"] ?>">
+		<input type="submit" value="<?php print _("Submit") ; ?>">
+		<?php
 	}
 }
 ?>
